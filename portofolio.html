@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Portofolio Siswa - SMKN 20 Jakarta</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    :root {
+      --bg: linear-gradient(180deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+      --text: #eee;
+      --card: #1f1f1f;
+      --primary: #3498db;
+      --dark: #2c3e50;
+    }
+
+    body.dark {
+      --bg: linear-gradient(180deg, #000000 0%, #000428 50%, #004e92 100%);
+      --text: #eee;
+      --card: #1f1f1f;
+      --primary: #3498db;
+      --dark: #000;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    header {
+      background: var(--dark);
+      color: white;
+      padding: 20px;
+      text-align: center;
+      position: relative;
+    }
+
+    .theme-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    nav {
+      background: var(--primary);
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+      padding: 10px 0;
+      display: none;
+    }
+
+    nav button {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 16px;
+      padding: 10px 18px;
+      cursor: pointer;
+      transition: background 0.3s;
+      border-radius: 6px;
+    }
+
+    nav button:hover,
+    nav button.active {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    section {
+      display: none;
+      padding: 25px 20px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    section.active {
+      display: block;
+    }
+
+    .card {
+      background: var(--card);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+      transition: background 0.3s;
+    }
+
+    footer {
+      background: var(--dark);
+      color: white;
+      text-align: center;
+      padding: 15px;
+      margin-top: 40px;
+      display: none;
+    }
+
+    #login-form {
+      max-width: 400px;
+      margin: 100px auto;
+      background: var(--card);
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+
+    #login-form input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    #login-form button {
+      width: 100%;
+      background: var(--primary);
+      border: none;
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .error {
+      color: red;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .slide {
+      animation: slideInUp 0.6s ease;
+    }
+
+    .stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle 2s infinite;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0; }
+      50% { opacity: 1; }
+    }
+
+    .profil-img {
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 5px solid var(--primary);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease;
+    }
+
+    .profil-img:hover {
+      transform: scale(1.05);
+    }
+
+    @media (max-width: 600px) {
+      nav {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      nav button {
+        width: 100%;
+        text-align: center;
+      }
+
+      .theme-toggle {
+        top: 10px;
+        right: 10px;
+        padding: 5px 10px;
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <button class="theme-toggle" onclick="toggleTheme()">🌙 Mode</button>
+
+  <!-- Login -->
+  <div id="login-form">
+    <h2>Login</h2>
+    <div class="error" id="login-error"></div>
+    <input type="text" id="username" placeholder="Username" />
+    <input type="password" id="password" placeholder="Password" />
+    <button onclick="login()">Masuk</button>
+  </div>
+
+  <!-- Main Content -->
+  <div id="main-content" style="display: none;">
+    <header>
+      <h1>Portofolio Siswa</h1>
+      <p><span id="type-effect"></span></p>
+    </header>
+
+    <nav id="main-nav">
+      <button onclick="tampilkan('beranda', this)">🏠 Beranda</button>
+      <button onclick="tampilkan('data', this)">🧑‍🎓 Data Pribadi</button>
+      <button onclick="tampilkan('tugas', this)">📚 Tugas</button>
+      <button onclick="tampilkan('kontak', this)">📞 Kontak</button>
+      <button onclick="logout()">🚪 Logout</button>
+    </nav>
+
+    <main>
+      <section id="beranda" class="active">
+        <div class="card">
+          <h2>Selamat Datang!</h2>
+          <p>Gunakan menu di atas untuk melihat data pribadi, tugas, dan kontak saya.</p>
+        </div>
+      </section>
+
+      <section id="data">
+        <div class="card slide">
+          <h2>Data Pribadi</h2>
+          <div style="text-align:center; margin-bottom:20px;">
+            <img src="foto.jpg" alt="Foto Profil" class="profil-img" />
+          </div>
+          <ul>
+            <li><strong>Nama:</strong> Muhammad Athar Fazhan</li>
+            <li><strong>Sekolah:</strong> SMKN 20 Jakarta</li>
+            <li><strong>Kelas:</strong> X RPL</li>
+            <li><strong>Alamat:</strong> Jl. Hj. Saikin, Jakarta Selatan, Indonesia</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="tugas">
+        <div class="card">
+          <h2>Daftar Tugas</h2>
+          <ol>
+            <li>Tugas 1: Desain Web</li>
+            <li>Tugas 2: HTML Dasar</li>
+            <li>Tugas 3: CSS Layout</li>
+            <li>Tugas 4: JavaScript Interaktif</li>
+          </ol>
+        </div>
+      </section>
+
+      <section id="kontak">
+        <div class="card">
+          <h2>Kontak</h2>
+          <p>Email: Atharfazhan304@gmail.com</p>
+          <p>Instagram: @paawlll_</p>
+          <p>WhatsApp: +62 8216 4732 505</p>
+        </div>
+      </section>
+    </main>
+
+    <footer id="main-footer">
+      &copy; 2025 Portofolio Anda - SMKN 20 Jakarta
+    </footer>
+  </div>
+
+  <script src="main.js"></script>
+  <script>
+    const text = "Selamat datang di portofolio saya...";
+    let index = 0;
+
+    function startTypeEffect() {
+      const el = document.getElementById("type-effect");
+      el.textContent = "";
+      index = 0;
+      const typing = setInterval(() => {
+        if (index < text.length) {
+          el.textContent += text.charAt(index);
+          index++;
+        } else {
+          clearInterval(typing);
+        }
+      }, 60);
+    }
+
+    function toggleTheme() {
+      document.body.classList.toggle("dark");
+    }
+
+    function login() {
+      const user = document.getElementById("username").value;
+      const pass = document.getElementById("password").value;
+      const error = document.getElementById("login-error");
+
+      if (user === "Muhammad Athar Fazhan" && pass === "Blueskyies1224!") {
+        document.getElementById("login-form").style.display = "none";
+        document.getElementById("main-content").style.display = "block";
+        document.getElementById("main-nav").style.display = "flex";
+        document.getElementById("main-footer").style.display = "block";
+        tampilkan("beranda", document.querySelector('nav button'));
+        startTypeEffect();
+        error.textContent = "";
+      } else {
+        error.textContent = "Username atau password salah!";
+      }
+    }
+
+    function logout() {
+      document.getElementById("login-form").style.display = "block";
+      document.getElementById("main-content").style.display = "none";
+      document.getElementById("username").value = "";
+      document.getElementById("password").value = "";
+    }
+
+    function tampilkan(id, btn) {
+      const sections = document.querySelectorAll("main section");
+      sections.forEach(s => s.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
+
+      const navBtns = document.querySelectorAll("nav button");
+      navBtns.forEach(b => b.classList.remove("active"));
+      if (btn) btn.classList.add("active");
+    }
+  </script>
+</body>
+</html>
